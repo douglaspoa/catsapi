@@ -5,6 +5,7 @@ var app = new Vue({
         color: '',
         create_name: '',
         create_color: '',
+        message: '',
         fields: ['id', 'name', 'color', 'actions'],
         infoModal: {
             id: 'info-modal',
@@ -73,14 +74,20 @@ var app = new Vue({
                 config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
                 .then(function (response) {
-                    //handle success
-                    console.log(response)
-                    app.getCats()
-                    app.alert = 1
+                    if (response.data.status_code = 400) {
+                        app.alert = 4;
+                        app.message = response.data.message
+                    } else {
+                        //handle success
+                        console.log(response)
+                        app.getCats()
+                        app.alert = 1
+                    }
                 })
                 .catch(function (response) {
                     //handle error
                     console.log(response)
+                    app.alert = 4
                 });
         },
         createCats: function(){
@@ -104,15 +111,20 @@ var app = new Vue({
                 config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
                 .then(function (response) {
-                    //handle success
-                    console.log(response)
-                    app.getCats()
-                    app.alert = 2;
-                    app.resetForm();
+                    if (response.data.status_code = 400) {
+                        app.alert = 3;
+                        app.message = response.data.message
+                    } else {
+                        //handle success
+                        app.getCats()
+                        app.alert = 2;
+                        app.resetForm();
+                    }
                 })
                 .catch(function (response) {
                     //handle error
                     console.log(response)
+                    app.alert = 3
                 });
         },
         resetForm: function(){

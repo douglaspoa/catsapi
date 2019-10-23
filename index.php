@@ -56,6 +56,7 @@
             <b-modal ref="modal" hide-footer :id="infoModal.id" :title="infoModal.title">
                 <form ref="form">
                     <b-alert dismissible variant="success" v-if="alert === 1"show>Gato atualizado com sucesso!</b-alert>
+                    <b-alert dismissible variant="danger" v-if="alert === 4"show>{{message}}</b-alert>
                     <b-form-group
                             label="Nome"
                             label-for="name"
@@ -86,6 +87,7 @@
         </b-container>
         <b-container class="bv-example-row">
             <b-alert dismissible variant="success" v-if="alert === 2"show>Gato adicionado com sucesso!</b-alert>
+            <b-alert dismissible variant="danger" v-if="alert === 3"show>{{message}}</b-alert>
             <b-row>
                 <b-col>
                     <form ref="create_form">

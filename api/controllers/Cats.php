@@ -72,25 +72,34 @@ namespace controllers{
 
         public function insertCat($data)
         {
-            $keys = array_keys($data[0]);
-            $stmt = $this->PDO->prepare("INSERT INTO Cats (".implode(',', $keys).") VALUES (:".implode(",:", $keys).")");
-            $stmt ->bindValue(':name', $data[0]['name']);
-            $stmt ->bindValue(':color', $data[0]['color']);
-            $stmt->execute();
-            $lastId = $this->PDO->lastInsertId();
+            if ($data[0]['name']  && $data[0]['color']) {
+                $keys = array_keys($data[0]);
+                $stmt = $this->PDO->prepare("INSERT INTO Cats (" . implode(',', $keys) . ") VALUES (:" . implode(",:", $keys) . ")");
+                $stmt->bindValue(':name', $data[0]['name']);
+                $stmt->bindValue(':color', $data[0]['color']);
+                $stmt->execute();
+                $lastId = $this->PDO->lastInsertId();
 
-            if ($lastId > 0) {
-                $result =[
-                    'body' => $data,
-                    'status_code' => '201'
+                if ($lastId > 0) {
+                    $result = [
+                        'body' => $data,
+                        'status_code' => '201'
+                    ];
+
+                    return json_encode($result);
+                }
+
+                $response = [
+                    'message' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
+                    'status_code' => '500'
                 ];
 
-                return json_encode($result);
+                return json_encode($response);
             }
 
             $response  = [
-                'message' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
-                'status_code' => '500'
+                'message' => 'Não foi possível interpretar a requisição. Verifique a sintaxe das informações enviadas.',
+                'status_code' => '400'
             ];
 
             return json_encode($response);
