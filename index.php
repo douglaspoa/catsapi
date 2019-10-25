@@ -15,7 +15,7 @@ $app->get('/{id}',  function (Request $request, Response $response, $args){
     $result =  (new \controllers\Cats($response))->getCat($args['id']);
     return $response->withStatus($result['status'])
         ->withHeader('Content-Type', 'application/json')
-        ->write(json_encode($result['body']));
+        ->withJson($result['body']);
 });
 
 $app->post('/',  function (Request $request, Response $response){
@@ -23,7 +23,7 @@ $app->post('/',  function (Request $request, Response $response){
     $result =  (new \controllers\Cats($response))->insertCat($body);
     return $response->withStatus($result['status'])
         ->withHeader('Content-Type', 'application/json')
-        ->write(json_encode($result['body']));
+        ->withJson($result['body']);
 });
 
 $app->patch('/{id}',  function (Request $request, Response $response, $args){
@@ -31,7 +31,7 @@ $app->patch('/{id}',  function (Request $request, Response $response, $args){
     $result =  (new \controllers\Cats($response))->updateCat($body, $args['id']);
     return $response->withStatus($result['status'])
         ->withHeader('Content-Type', 'application/json')
-        ->write(json_encode($result['body']));
+        ->withJson($result['body']);
 });
 
 $app->delete('/{id}',  function (Request $request, Response $response, $args){
