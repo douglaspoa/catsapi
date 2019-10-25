@@ -30,7 +30,7 @@ namespace controllers{
                     $p  = [
                         "id" => $cat['id'],
                         "name" => $cat['name'],
-                        "colors" => $cat['colors']
+                        "colors" => explode(",",$cat['colors'])
                     ];
 
                     array_push($catsResult["body"], $p);
@@ -53,11 +53,12 @@ namespace controllers{
             $stmt = $this->PDO->prepare($query);
             $stmt ->bindValue(':id',$id);
             $stmt->execute();
-
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            $row['colors'] =  explode(",",$row['colors']);
             $count = $stmt->rowCount();
             if($count > 0) {
                 $result =[
-                    'body' => $stmt->fetch(\PDO::FETCH_ASSOC),
+                    'body' => $row,
                     'status' => 200
                 ];
 
@@ -74,6 +75,7 @@ namespace controllers{
         public function insertCat($data)
         {
             if ($data[0]['name']  && $data[0]['colors']) {
+                $arrayColors = $data[0]['colors'];
                 $data[0]['colors'] = implode(', ', $data[0]['colors']);
                 $keys = array_keys($data[0]);
                 $stmt = $this->PDO->prepare("INSERT INTO Cats (" . implode(',', $keys) . ") VALUES (:" . implode(",:", $keys) . ")");
@@ -82,6 +84,7 @@ namespace controllers{
                 $stmt->execute();
                 $lastId = $this->PDO->lastInsertId();
                 $data[0]['id'] = $lastId;
+                $data[0]['colors'] = $arrayColors;
 
                 if ($lastId > 0) {
                     $result = [
