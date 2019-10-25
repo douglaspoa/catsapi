@@ -27,6 +27,10 @@ var app = new Vue({
         getCats: function(){
             axios.get('../')
                 .then(function (response) {
+                    var i;
+                    for (i = 0; i < response.data.length; i++) {
+                        response.data[i]['colors'] = response.data[i]['colors'].join()
+                    }
                     app.contacts = response.data;
                 })
                 .catch(function (error) {

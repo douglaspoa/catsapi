@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="169373a3-9175-44e0-ab1d-b954a0a29b3c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/Cats.php" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/Cats.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/view/js/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
