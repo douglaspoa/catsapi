@@ -19,6 +19,8 @@ composer install
 ```
 
 ## Utilização
+Para acessar a view com o painel basta acessar /view
+##
 A utilização é bastante simples as ações de crud estão logo na página inicial do projeto, la se pode adicionar, editar ou excluir um "gato", além de poder ver todos que estão cadastrados na base de dados.
 ##
 No caminho api/index.php  temos os metodos que a API ele está utilizando 

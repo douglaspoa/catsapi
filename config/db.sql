@@ -23,14 +23,14 @@ SET time_zone = "+00:00";
 CREATE TABLE `Cats` (
   `id` int(11) UNSIGNED NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `color` varchar(255) NOT NULL
+  `colors` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Despejando dados para a tabela `Cats`
 --
 
-INSERT INTO `Cats` (`id`, `name`, `color`) VALUES
+INSERT INTO `Cats` (`id`, `name`, `colors`) VALUES
 (35, 'Garfield ', 'Laranja'),
 (36, 'Felix', 'Cinza');
 

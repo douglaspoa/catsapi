@@ -23,25 +23,26 @@ namespace controllers{
                 $catsResult = [];
                 $catsResult["body"] = [];
                 $catsResult["count"] = $count;
+                $catsResult["status"] = 200;
                 $row = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
                 foreach ($row as  $cat){
                     $p  = [
                         "id" => $cat['id'],
                         "name" => $cat['name'],
-                        "color" => $cat['color']
+                        "colors" => $cat['colors']
                     ];
 
                     array_push($catsResult["body"], $p);
                 }
 
-                return json_encode($catsResult);
+                return $catsResult;
             } else {
                 $response = [
                     'status_code' => 404,
-                    'message' => 'nenhum gatinho encontrado :('
+                    'body' => 'nenhum gatinho encontrado :('
                 ];
-                $response = json_encode($response);
+
                 return $response;
             }
         }
@@ -57,87 +58,100 @@ namespace controllers{
             if($count > 0) {
                 $result =[
                     'body' => $stmt->fetch(\PDO::FETCH_ASSOC),
-                    'status_code' => '200'
+                    'status' => 200
                 ];
 
-                return json_encode($result);
+                return $result;
             } else {
                 $result  = [
-                    'message' =>   'nenhum gatinho encontrado :(',
-                    'status_code' => '404'
+                    'body' =>   'nenhum gatinho encontrado :(',
+                    'status' => 404
                 ];
-                return json_encode($result);
+                return $result;
             }
         }
 
         public function insertCat($data)
         {
-            if ($data[0]['name']  && $data[0]['color']) {
+            if ($data[0]['name']  && $data[0]['colors']) {
+                $data[0]['colors'] = implode(', ', $data[0]['colors']);
                 $keys = array_keys($data[0]);
                 $stmt = $this->PDO->prepare("INSERT INTO Cats (" . implode(',', $keys) . ") VALUES (:" . implode(",:", $keys) . ")");
                 $stmt->bindValue(':name', $data[0]['name']);
-                $stmt->bindValue(':color', $data[0]['color']);
+                $stmt->bindValue(':colors', $data[0]['colors']);
                 $stmt->execute();
                 $lastId = $this->PDO->lastInsertId();
+                $data[0]['id'] = $lastId;
 
                 if ($lastId > 0) {
                     $result = [
                         'body' => $data,
-                        'status_code' => '201'
+                        'status' => 201
                     ];
 
-                    return json_encode($result);
+                    return $result;
                 }
 
                 $response = [
-                    'message' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
-                    'status_code' => '500'
+                    'body' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
+                    'stats' => 500
                 ];
 
-                return json_encode($response);
+                return $response;
             }
 
             $response  = [
-                'message' => 'Não foi possível interpretar a requisição. Verifique a sintaxe das informações enviadas.',
-                'status_code' => '400'
+                'body' => 'Não foi possível interpretar a requisição. Verifique a sintaxe das informações enviadas.',
+                'status' => 400
             ];
 
-            return json_encode($response);
+            return $response;
         }
 
         public function updateCat($data,$id){
 
-            if ($data[0]['name']  && $data[0]['color']) {
+            if ($data[0]['name']  || $data[0]['colors']) {
 
+                $data[0]['colors'] = implode(', ', $data[0]['colors']);
+                
+                if (count($data) > 0) {
+                    foreach ($data[0] as $key => $value) {
+                        $value = "'$value'";
+                        $updates[] = "$key = $value";
+                    }
+                }
 
-                $stmt = $this->PDO->prepare("UPDATE Cats SET name = :name, color = :color WHERE id = :id");
+                $stmt = $this->PDO->prepare("UPDATE Cats SET ". $implodeArray = implode(', ', $updates)." WHERE id = :id");
                 $stmt->bindValue(':id', $id);
-                $stmt->bindValue(':name', $data[0]['name']);
-                $stmt->bindValue(':color', $data[0]['color']);
+                $stmt->execute();
+
+                $query = "SELECT * FROM Cats WHERE id = :id";
+                $stmt = $this->PDO->prepare($query);
+                $stmt ->bindValue(':id',$id);
                 $stmt->execute();
 
                 if ($stmt->rowCount() > 0) {
                     $response = [
-                        'body' => $data,
-                        'status_code' => '201'
+                        'body' => $stmt->fetch(\PDO::FETCH_ASSOC),
+                        'status' => 201
                     ];
 
-                    return json_encode($response);
+                    return $response;
                 } else {
                     $response = [
-                        'message' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
-                        'status_code' => '500'
+                        'body' => $implodeArray,
+                        'status' => 500
                     ];
-                    return json_encode($response);
+                    return $response;
                 }
             }
 
             $response  = [
-                'message' => 'Não foi possível interpretar a requisição. Verifique a sintaxe das informações enviadas.',
-                'status_code' => '400'
+                'body' => 'Não foi possível interpretar a requisição. Verifique a sintaxe das informações enviadas.',
+                'status' => 400
             ];
 
-            return json_encode($response);
+            return $response;
 
         }
 
@@ -149,16 +163,16 @@ namespace controllers{
 
             if ($stmt->rowCount() > 0) {
                 $response = [
-                    'status_code' => '200'
+                    'status' => 200
                 ];
 
-                return json_encode($response);
+                return $response;
             } else {
                 $response = [
-                    'message' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
-                    'status_code' => '500'
+                    'body' => 'Ocorreu uma falha na plataforma. Por favor, entre em contato com o atendimento.',
+                    'status' => 500
                 ];
-                return json_encode($response);
+                return $response;
             }
 
         }
